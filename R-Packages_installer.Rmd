@@ -1,0 +1,33 @@
+####################################
+
+# Simplify re-loading of packages following R update
+
+# Code by Colin T. Kremer, 3/21/12
+
+# modified from: http://stackoverflow.com/questions/1401904/painless-way-to-install-a-new-version-of-r-on-windows
+
+####################################
+
+# PART ONE: run prior to updating R
+
+# Select a working directory where you wish to deposit a list of your currently installed packages
+setwd("/Users/lennonj/Desktop")
+
+# grab current list of packages
+installed<-installed.packages()[,1]
+
+# save it
+write(installed,"Rpackages.csv")
+
+# Now go and update R
+
+# PART TWO: after updating R
+
+# afterwards, return to this file in the appropriate working directory, and run the remainder:
+setwd("/Users/lennonj/Desktop")
+package.list<-as.character(read.csv("Rpackages.csv")[,1])
+
+installed <- package.list %in% installed.packages()[,"Package"]
+if(length(package.list[!installed])>=1){
+	install.packages(package.list[!installed])
+}
